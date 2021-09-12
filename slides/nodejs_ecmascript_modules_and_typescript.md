@@ -263,3 +263,14 @@ Set `"typescript.preferences.importModuleSpecifierEnding": "js",` in your settin
 💡 The reasoning behind this is TypeScript's design goal 7: Preserve runtime behavior of all JavaScript code. See [comment](https://github.com/microsoft/TypeScript/issues/15479#issuecomment-543329547)
 
 </div>
+
+---
+
+### nodemon
+
+
+---
+
+### Jest
+
+[Jest](https://jestjs.io/docs/ecmascript-modules) ships with experimental support for ECMAScript Modules (ESM).
