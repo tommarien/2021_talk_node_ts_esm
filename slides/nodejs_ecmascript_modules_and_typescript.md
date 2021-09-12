@@ -156,7 +156,7 @@ By default node uses CommonJS!
 
 ### Change it to ESM
 
-Either change the file extension to .mjs (cjs is the default) or use `type: module` in package.json
+Either change the file extension to .mjs (cjs is the default) or use `type: module` in package.json, let choose the latter because 🙈 TypeScript
 
 ##### package.json
 
