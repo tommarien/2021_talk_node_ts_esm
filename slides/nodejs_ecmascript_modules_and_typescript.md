@@ -250,6 +250,8 @@ An import path cannot end with a '.ts' extension.
 Consider importing './say.js' instead.ts(2691)
 ```
 
+<div class="fragment">
+
 So even for typescript we have to add .js extension!
 
 <small>
@@ -257,6 +259,8 @@ So even for typescript we have to add .js extension!
 Set `"typescript.preferences.importModuleSpecifierEnding": "js",` in your settings (vscode), so your autoimports adds them by default!
 
 </small>
+
+</div>
 
 <div class="fragment">
 
@@ -268,6 +272,80 @@ Set `"typescript.preferences.importModuleSpecifierEnding": "js",` in your settin
 
 ### nodemon
 
+Improving our dev experience seems like a very natural next step
+
+<div class="fragment">
+
+```
+yarn add --dev nodemon ts-node
+```
+
+##### package.json
+
+```json
+{
+  "scripts": {
+    "start": "nodemon -w src src/main.ts"
+  }
+}
+```
+
+</div>
+
+<div class="fragment">
+
+##### 🧨 And boom
+
+```
+TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts"
+ for /Users/tommarien/git/tommarien/2021_talk_node_ts_esm/src/main.ts
+
+at Loader.defaultGetFormat [as _getFormat] (internal/modules/esm/get_format.js:71:15) 👈
+```
+
+</div>
+
+===
+
+#### This is the moment in life where you start wondering
+
+<div class="fragment">
+
+<img src="./images/blue-pill.jpeg" width="800px" />
+
+Why, oh, why didn't I take the blue pill?
+
+</div>
+
+===
+
+#### The solution?
+
+Although the error complaints about a file extension, esm is really the underlying issue here.
+
+<div class="fragment">
+
+<img src="./images/on-fire.png" width="600px" />
+
+> To solve this we need the experimental [Loader](https://nodejs.org/docs/latest-v14.x/api/esm.html#esm_loaders) API 🙈.
+
+</div>
+
+===
+
+#### The experimental solution 🧪
+
+##### package.json
+
+```json
+{
+  "scripts": {
+    "start": "nodemon -w src --exec node --loader ts-node/esm --no-warnings src/main.ts"
+  }
+}
+```
+
+> `ts-node` comes with a ready to use experimental loader which fixes this exact issue, we pass `--no-warnings` flag to node just because we don't want to be reminded of this abomination!
 
 ---
 

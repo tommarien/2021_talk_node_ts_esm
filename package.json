@@ -8,12 +8,15 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "14",
+    "nodemon": "^2.0.12",
     "reveal-md": "^5.1.3",
+    "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   },
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc",
+    "start": "nodemon -w src --exec node --loader ts-node/esm --no-warnings src/main.ts",
     "show": "reveal-md ./slides/nodejs_ecmascript_modules_and_typescript.md",
     "show:watch": "reveal-md ./slides/nodejs_ecmascript_modules_and_typescript.md --watch"
   }
