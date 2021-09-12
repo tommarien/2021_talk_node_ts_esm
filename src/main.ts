@@ -1,1 +1,3 @@
-console.log('Hello World!');
+import { say } from './say.js';
+
+say('Hello World!');

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-    "module": "commonjs" /* Specify what module code is generated. */,
+    "module": "ESNext" /* Specify what module code is generated. */,
     "lib": [
       "ES2020"
     ], /* Specify library files to be included in the compilation. */

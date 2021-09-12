@@ -2,6 +2,7 @@
   "name": "2021_talk_node_ts_esm",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "repository": "git@github.com:tommarien/2021_talk_node_ts_esm.git",
   "author": "Tom Marien <tommarien@gmail.com>",
   "license": "MIT",

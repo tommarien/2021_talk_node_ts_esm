@@ -27,6 +27,7 @@ As of node 14 the `--experimental-module` is no longer necessary, the esm featur
 </div>
 
 🎁 Nobody said it was ready to combine it with TypeScript 🙈 <!-- .element: class="fragment" -->
+
 ---
 
 ## Basics
@@ -114,4 +115,151 @@ yarn build
 console.log('Hello World!');
 ```
 
-🤔 But wait, `use strict` is not necessary for esm?
+🤔 But wait, you are not using any modules?
+
+===
+
+#### Use ecmascript modules
+
+##### src/say.ts
+
+```ts
+export function say(message: string): void {
+  console.log(message);
+}
+```
+
+##### src/main.ts
+
+```ts
+import { say } from './say';
+
+say('Hello World!');
+```
+
+<div class="fragment">
+
+##### dist/main.js
+
+```js
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
+const say_1 = require('./say');
+(0, say_1.say)('Hello World!');
+```
+
+By default node uses CommonJS!
+
+</div>
+
+===
+
+### Change it to ESM
+
+Either change the file extension to .mjs (cjs is the default) or use `type: module` in package.json
+
+##### package.json
+
+```json
+{
+  "type": "module"
+}
+```
+
+##### tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext"
+    /* ... */
+  }
+}
+```
+
+===
+
+#### Build, again 🔧
+
+##### dist/main.js
+
+```js
+import { say } from './say';
+say('Hello World!');
+```
+
+✨ Finally, more readable and ESM!
+
+<div class="fragment">
+
+🤔 But what happens when you run it?
+
+```
+# 🧨
+➜ node dist/main.js
+internal/process/esm_loader.js:74
+    internalBinding('errors').triggerUncaughtException(
+                              ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module ...
+```
+
+</div>
+
+===
+
+#### Bare Paths
+
+When using ES6 imports in Node.js, you must put the extension .js, except for "bare paths"!
+
+```js
+import { say } from './say'; // ❌
+import { say } from './say.js'; // ✅
+```
+
+<div class="fragment">
+
+#### External Modules
+
+```js
+import lodash from 'lodash'; // ✅ Bare path
+```
+
+```js
+import keyBy from 'lodash/keyBy'; // ❌ Not a bare path!
+import keyBy from 'lodash/keyBy.js'; // ✅ Not a bare path!
+```
+
+</div>
+
+===
+
+#### Build, again and again 🔧
+
+##### src/main.js
+
+```ts
+import { say } from './say.ts';
+
+say('Hello World!');
+```
+
+```
+An import path cannot end with a '.ts' extension.
+Consider importing './say.js' instead.ts(2691)
+```
+
+So even for typescript we have to add .js extension!
+
+<small>
+
+Set `"typescript.preferences.importModuleSpecifierEnding": "js",` in your settings (vscode), so your autoimports adds them by default!
+
+</small>
+
+<div class="fragment">
+
+💡 The reasoning behind this is TypeScript's design goal 7: Preserve runtime behavior of all JavaScript code. See [comment](https://github.com/microsoft/TypeScript/issues/15479#issuecomment-543329547)
+
+</div>
