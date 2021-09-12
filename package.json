@@ -1,8 +1,18 @@
 {
+  "name": "2021_talk_node_ts_esm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:tommarien/2021_talk_node_ts_esm.git",
+  "author": "Tom Marien <tommarien@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
-    "reveal-md": "^5.1.3"
+    "@types/node": "14",
+    "reveal-md": "^5.1.3",
+    "typescript": "^4.4.3"
   },
   "scripts": {
+    "clean": "rimraf dist",
+    "build": "tsc",
     "show": "reveal-md ./slides/nodejs_ecmascript_modules_and_typescript.md",
     "show:watch": "reveal-md ./slides/nodejs_ecmascript_modules_and_typescript.md --watch"
   }
