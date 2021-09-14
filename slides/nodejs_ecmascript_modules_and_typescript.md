@@ -4,7 +4,7 @@ title: Node.js Ecmascript modules in TypeScript
 
 # ESM in TypeScript
 
-<img src="./images/use-ecmascript-modules-nodejs.jpeg" width="600px" /><br>
+<img src="./images/easy_peasy.jpeg" width="800px" /><br>
 
 <small>
 Copyright (©️) Euricom
@@ -16,15 +16,13 @@ Copyright (©️) Euricom
 
 As of node 14 the `--experimental-module` is no longer necessary, the esm feature had been marked stable in the node.js [documentation](https://nodejs.org/docs/latest-v14.x/api/esm.html), it was even removed from node v12.17.0.
 
-<div class="fragment">
+===
 
-##### 🤔 So i thought, while preparing bootcamp:
+### 🤔 So i thought, while preparing bootcamp:
 
 - Different syntax when working with files and or directories, let us teach the new syntax!
-- Cleaner output, no `use strict` etc.
-- It's stable!
-
-</div>
+- Cleaner output, no use strict etc. <!-- .element: class="fragment" -->
+- It's stable! 🤩 <!-- .element: class="fragment" -->
 
 🎁 Nobody said it was ready to combine it with TypeScript 🙈 <!-- .element: class="fragment" -->
 
@@ -270,6 +268,12 @@ Set `"typescript.preferences.importModuleSpecifierEnding": "js",` in your settin
 
 ---
 
+## nodemon
+
+<img src="./images/no_demon.jpeg" width="500px" />
+
+===
+
 ### nodemon
 
 Improving our dev experience seems like a very natural next step
@@ -349,6 +353,82 @@ Although the error complaints about a file extension, esm is really the underlyi
 
 ---
 
+## Jest
+
+<img src="./images/jest.jpeg" width="400px" />
+
+===
+
 ### Jest
 
 [Jest](https://jestjs.io/docs/ecmascript-modules) ships with experimental support for ECMAScript Modules (ESM).
+
+```
+yarn add --dev jest ts-jest @types/jest
+```
+
+##### package.json
+
+```json
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+##### Create jest.config.js
+
+```
+yarn ts-jest config:init
+```
+
+===
+
+#### Sum
+
+##### src/calc.ts
+
+```ts
+export function sum(x: number, y: number): number {
+  return x + y;
+}
+```
+
+##### src/calc.spec.ts
+
+```ts
+import { sum } from './calc.js';
+
+test('it adds both numbers', () => {
+  expect(sum(1, 4)).toEqual(5);
+});
+```
+
+<div class="fragment">
+
+##### 🧨 And boom
+
+```
+ReferenceError: module is not defined in ES module scope
+This file is being treated as an ES module because it has a '.js' file extension
+and '/Users/tommarien/git/tommarien/2021_talk_node_ts_esm/package.json' contains "type": "module".
+To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///Users/tommarien/git/tommarien/2021_talk_node_ts_esm/jest.config.js:2:1
+```
+
+</div>
+
+===
+
+#### Darn config generator 🤬
+
+##### jest.config.js
+
+```js
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+export default {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+};
+```
