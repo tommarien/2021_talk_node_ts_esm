@@ -585,4 +585,64 @@ $ jest
 
 <img src="./images/pain.jpeg" width="700px" />
 
-And i started to feel both 😔<!-- .element: class="fragment" -->
+And i started to feel both 😔 <!-- .element: class="fragment" -->
+
+===
+
+#### Wir schaffen das!
+
+<img src="./images/bob_the_builder.jpg" width="600px" />
+
+===
+
+#### 1. `--experimental-vm-modules` 🙈
+
+> --experimental-vm-modules :
+> Added in: v9.6.0
+>
+> Enable experimental ES Module support in the vm module.
+
+```json
+/* package.json */
+{
+  "scripts": {
+    /* ... */
+    "test": "node --experimental-vm-modules --no-warnings node_modules/.bin/jest"
+  }
+}
+```
+
+===
+
+#### 2. Configure `ts-jest`
+
+```js
+// jest.config.js
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+export default {
+  // ...
+  extensionsToTreatAsEsm: ['.ts'],
+  globals: {
+    'ts-jest': {
+      useESM: true,
+    },
+  },
+};
+```
+
+<div class="fragment">
+
+##### 🎉 And tada
+
+```
+$ node --experimental-vm-modules --no-warnings node_modules/.bin/jest
+ PASS  src/calc.spec.ts
+  ✓ it adds both numbers (20 ms)
+
+  console.log
+    file:///Users/tommarien/git/tommarien/2021_talk_node_ts_esm/src/calc.spec.ts
+```
+
+</div>
+
+===
