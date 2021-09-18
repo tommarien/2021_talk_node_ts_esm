@@ -4,7 +4,7 @@ title: Node.js Ecmascript modules in TypeScript
 
 # ESM in TypeScript
 
-<img src="./images/node.png" width="800px" /><br>
+<img src="./images/node.png" width="700px" /><br>
 
 <small>
 Copyright (©️) Euricom
@@ -798,7 +798,7 @@ test('it sums the given values', () => {
 
 ---
 
-### Sidenote
+### Notable mention
 
 > During bootcamp, it did not try the jest route completely and abandoned esm for node completely and went back to CJS.
 
