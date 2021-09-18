@@ -646,3 +646,27 @@ $ node --experimental-vm-modules --no-warnings node_modules/.bin/jest
 </div>
 
 ===
+
+#### 3. Optional, but recommended (use `@jest/globals`)
+
+```
+yarn remove @types/jest
+
+yarn add -D @jest/globals
+```
+
+<div class="fragment">
+
+```ts
+// src/calc.spec.js
+import { test, expect } from '@jest/globals';
+import { sum } from './calc.js';
+
+test('it adds both numbers', () => {
+  expect(sum(1, 4)).toEqual(5);
+});
+```
+
+</div>
+
+No stinky globals 🦨 <!-- .element: class="fragment" -->

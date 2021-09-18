@@ -7,8 +7,8 @@
   "author": "Tom Marien <tommarien@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^27.0.1",
-    "@types/node": "14.17.17",
+    "@jest/globals": "^27.2.0",
+    "@types/node": "^14.17.17",
     "jest": "^27.2.0",
     "nodemon": "^2.0.12",
     "reveal-md": "^5.1.3",
