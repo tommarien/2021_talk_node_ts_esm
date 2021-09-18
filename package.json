@@ -8,6 +8,7 @@
   "license": "MIT",
   "devDependencies": {
     "@jest/globals": "^27.2.0",
+    "@types/jest": "^27.0.1",
     "@types/node": "^14.17.17",
     "jest": "^27.2.0",
     "nodemon": "^2.0.12",
@@ -23,5 +24,6 @@
     "show": "reveal-md ./slides/nodejs_ecmascript_modules_and_typescript.md",
     "show:watch": "reveal-md ./slides/nodejs_ecmascript_modules_and_typescript.md --watch",
     "test": "node --experimental-vm-modules --no-warnings node_modules/.bin/jest"
-  }
+  },
+  "dependencies": {}
 }

@@ -4,7 +4,7 @@ title: Node.js Ecmascript modules in TypeScript
 
 # ESM in TypeScript
 
-<img src="./images/easy_peasy.jpeg" width="800px" /><br>
+<img src="./images/node.png" width="800px" /><br>
 
 <small>
 Copyright (©️) Euricom
@@ -30,7 +30,7 @@ As of node 14 the `--experimental-module` is no longer necessary, the esm featur
 
 ## Basics
 
-<img src="./images/lets-get-it-started.jpeg" width="800px" />
+<img src="./images/easy_peasy.jpeg" width="800px" />
 
 ===
 
@@ -645,34 +645,179 @@ $ node --experimental-vm-modules --no-warnings node_modules/.bin/jest
 
 </div>
 
-===
-
-#### 3. Optional, but recommended (use `@jest/globals`)
-
-```
-yarn remove @types/jest
-
-yarn add -D @jest/globals
-```
-
-<div class="fragment">
-
-```ts
-// src/calc.spec.js
-import { test, expect } from '@jest/globals';
-import { sum } from './calc.js';
-
-test('it adds both numbers', () => {
-  expect(sum(1, 4)).toEqual(5);
-});
-```
-
-</div>
-
-No stinky globals 🦨 <!-- .element: class="fragment" -->
-
 ---
 
 ### What about mocking?
 
 <img src="./images/mocking.jpeg" width="500px" />
+
+===
+
+#### total
+
+```ts
+// src/calculator.ts
+import { sum } from './calc.js';
+
+export function total(...values: number[]): number {
+  return values.reduce((previous, current) => sum(previous, current), 0);
+}
+```
+
+===
+
+#### The test
+
+```ts
+import { sum } from './calc.js';
+import { total } from './calculator.js';
+
+jest.mock('./calc.js');
+
+test('it sums the given values', () => {
+  const mockSum = sum as jest.MockedFunction<typeof sum>);
+  mockSum.mockReturnValue(2);
+
+  expect(total(1, 2, 3)).toBe(2);
+  expect(mockSum).toHaveBeenCalledTimes(3);
+  expect(mockSum).toHaveBeenCalledWith(0, 1);
+  expect(mockSum).toHaveBeenCalledWith(2, 2);
+  expect(mockSum).toHaveBeenCalledWith(2, 3);
+});
+```
+
+<div class="fragment">
+
+##### 🧨 And boom
+
+```
+ FAIL  src/calculator.spec.ts
+  ● Test suite failed to run
+
+    ReferenceError: jest is not defined
+
+      2 | import { total } from './calculator.js';
+      3 |
+    > 4 | jest.mock('./calc.js');
+```
+
+</div>
+
+===
+
+#### The solution ? 🥺
+
+```
+yarn add -D @jest/globals
+```
+
+```ts
+// src/calculator.spec.ts
+import { jest } from '@jest/globals';
+
+import { sum } from './calc.js';
+import { total } from './calculator.js';
+
+jest.mock('./calc.js');
+```
+
+<div class="fragment">
+
+##### 🧨 And ... boom
+
+```
+  ● it sums the given values
+
+    TypeError: mockSum.mockReturnValue is not a function
+
+       8 | test('it sums the given values', () => {
+       9 |   const mockSum = sum as jest.MockedFunction<typeof sum>;
+    > 10 |   mockSum.mockReturnValue(2);
+```
+
+</div>
+
+===
+
+#### But why?
+
+<img src="./images/why.gif" width="600px" />
+
+===
+
+#### `jest.mock`
+
+Relies on babel's hoisting tricks 🪄
+
+<div class="fragment" style="margin-top:60px">
+
+#### `ESM`
+
+Native EcmaScript Modules are there before any javascript has a chance to intercept the loading of them. The loader api (experimental) could be a way to circumvent this.
+
+> Luckily work is being done on stabilizing the [loader](https://github.com/nodejs/node/pull/37468) api 👍
+
+</div>
+
+===
+
+#### The final solution !!!
+
+```ts
+import { test, expect, jest } from '@jest/globals';
+import { sum } from './calc.js';
+
+const mockSum = jest.fn<ReturnType<typeof sum>, Parameters<typeof sum>>();
+
+// 🙈 unstable FTW
+jest.unstable_mockModule('./calc.ts', () => ({
+  sum: mockSum,
+}));
+```
+
+<div class="fragment">
+
+```ts
+// Top level await makes it prettier, but it still ugly
+const { total } = await import('./calculator.js');
+
+test('it sums the given values', () => {
+  mockSum.mockReturnValue(2);
+
+  expect(total(1, 2, 3)).toBe(2);
+
+  expect(mockSum).toHaveBeenCalledTimes(3);
+
+  expect(mockSum).toHaveBeenCalledWith(0, 1);
+  expect(mockSum).toHaveBeenCalledWith(2, 2);
+  expect(mockSum).toHaveBeenCalledWith(2, 3);
+});
+```
+
+</div>
+
+---
+
+### Sidenote
+
+> During bootcamp, it did not try the jest route completely and abandoned esm for node completely and went back to CJS.
+
+<div class="fragment">
+
+Up until this point the only official mocking library that has complete ESM support is `testdouble.js`, but ... 🙈
+
+</div>
+
+<div class="fragment">
+
+- it uses quibble underlying, which needs a loader <!-- .element: class="fragment" -->
+- typescript needs a loader too <!-- .element: class="fragment" -->
+- atm loaders are not composable 🙈 <!-- .element: class="fragment" -->
+
+</div>
+
+---
+
+### The end
+
+<img src="./images/bonkers.jpeg" width="800px" />
