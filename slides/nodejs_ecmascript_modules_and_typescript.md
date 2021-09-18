@@ -187,11 +187,11 @@ import { say } from './say';
 say('Hello World!');
 ```
 
-✨ Finally, more readable and ESM!
+<small>✨ Finally, more readable and ESM!</small>
 
 <div class="fragment">
 
-🤔 But what happens when you run it?
+##### 🤔 But what happens when you run it?
 
 ```
 # 🧨
@@ -432,3 +432,157 @@ export default {
   testEnvironment: 'node',
 };
 ```
+
+<div class="fragment">
+
+##### 🧨 And boom
+
+```
+$ jest
+ FAIL  src/calc.spec.ts
+  ● Test suite failed to run
+
+    Cannot find module './calc.js' from 'src/calc.spec.ts'
+
+    > 1 | import { sum } from "./calc.js"
+        | ^
+      2 |
+      3 | test('it adds both numbers',()=>{
+      4 |    expect(sum(1,4)).toEqual(5);
+
+      at Resolver.resolveModule (node_modules/jest-resolve/build/resolver.js:322:11)
+      at Object.<anonymous> (src/calc.spec.ts:1:1)
+```
+
+</div>
+
+===
+
+#### Extensions anyone?
+
+<div style="float:left; margin-right:30px">
+
+<img src="./images/extensions.jpeg" width="400px" />
+
+</div>
+
+<div class="fragment">
+
+##### src/calc.spec.ts
+
+Yey, it works when we remove the `.js` 😬
+
+```ts
+import { sum } from './calc';
+```
+
+```
+$ jest
+ PASS  src/calc.spec.ts
+  ✓ it adds both numbers (2 ms)
+```
+
+</div>
+
+... or so it seems 🙈 <!-- .element: class="fragment" -->
+
+===
+
+#### What about a single convention on extensions?
+
+Atm we have to use Jest's moduleNameMapper, to remove the .js extension ([ts-jest issue 1709](https://github.com/kulshekhar/ts-jest/issues/1709))
+
+```js
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+export default {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  // We need to remove .js ext see https://github.com/kulshekhar/ts-jest/issues/1709
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
+};
+```
+
+<div class="fragment">
+
+##### 🎉 And tada
+
+```
+$ jest
+ PASS  src/calc.spec.ts
+  ✓ it adds both numbers (2 ms)
+```
+
+</div>
+
+===
+
+#### In depth: `__dirname`, `__filename`
+
+##### CommonJS
+
+```js
+// current-file-and-directory.js
+console.log({ __dirname, __filename });
+```
+
+<div class="fragment">
+
+##### ESM
+
+```js
+// ❌ current-file-and-directory.mjs
+console.log({ __dirname, __filename }); // 💣 ReferenceError: __dirname is not defined
+
+// ✅ current-file-and-directory.mjs
+const filename = import.meta.url;
+const dirname = new URL('./', filename).href; // 💡 Resolve relative to the current module
+
+console.log({ dirname, filename });
+```
+
+In ESM, your filename and directory will follow WHATWG [URL standard](https://url.spec.whatwg.org/), so they start with `file://`
+
+</div>
+
+===
+
+#### We want proof!
+
+##### src/calc.spec.ts
+
+```ts
+import { sum } from './calc.js';
+
+test('it adds both numbers', () => {
+  expect(sum(1, 4)).toEqual(5);
+  console.log(import.meta.url);
+});
+```
+
+<div class="fragment">
+
+##### 🧨 And boom
+
+```
+$ jest
+ FAIL  src/calc.spec.ts
+  ● Test suite failed to run
+
+    src/calc.spec.ts:5:15 - error TS1343: The 'import.meta' meta-property is only allowed
+     when the '--module' option is 'es2020', 'esnext', or 'system'.
+
+    5   console.log(import.meta.url);
+                    ~~~~~~~~~~~
+```
+
+</div>
+
+===
+
+#### WHUT 🤬
+
+<img src="./images/pain.jpeg" width="700px" />
+
+And i started to feel both 😔<!-- .element: class="fragment" -->

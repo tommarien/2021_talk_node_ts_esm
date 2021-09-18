@@ -22,6 +22,6 @@
     "start": "nodemon -w src --exec node --loader ts-node/esm --no-warnings src/main.ts",
     "show": "reveal-md ./slides/nodejs_ecmascript_modules_and_typescript.md",
     "show:watch": "reveal-md ./slides/nodejs_ecmascript_modules_and_typescript.md --watch",
-    "test": "jest"
+    "test": "node --experimental-vm-modules --no-warnings node_modules/.bin/jest"
   }
 }
