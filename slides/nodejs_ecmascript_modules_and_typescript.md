@@ -670,3 +670,9 @@ test('it adds both numbers', () => {
 </div>
 
 No stinky globals 🦨 <!-- .element: class="fragment" -->
+
+---
+
+### What about mocking?
+
+<img src="./images/mocking.jpeg" width="500px" />
