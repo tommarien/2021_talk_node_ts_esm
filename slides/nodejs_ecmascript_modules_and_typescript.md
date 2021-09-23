@@ -800,7 +800,7 @@ test('it sums the given values', () => {
 
 ### Notable mention
 
-> During bootcamp, it did not try the jest route completely and abandoned esm for node completely and went back to CJS.
+> During bootcamp, it did not try the jest route and abandoned esm for node completely and went back to CJS.
 
 <div class="fragment">
 
@@ -821,3 +821,5 @@ Up until this point the only official mocking library that has complete ESM supp
 ### The end
 
 <img src="./images/bonkers.jpeg" width="800px" />
+
+<small>https://github.com/tommarien/2021_talk_node_ts_esm</small>
